@@ -4,10 +4,10 @@ import { ButtonProps } from "./types";
 import styles from "./styles";
 
 export function Button(props: ButtonProps) {
-  const { buttonText } = props;
+  const { buttonText, style } = props;
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={[styles.container, style]}>
       <Text style={styles.text}>{buttonText}</Text>
     </TouchableOpacity>
   );
