@@ -6,6 +6,7 @@ import { useState } from "react";
 import { HandleChangeInputParams, MealFormProps } from "./types";
 import { useNavigation } from "@react-navigation/native";
 import { STORAGE_MEALS } from "../../../../storage/meals";
+import { DateModal } from "../../../../components/date-modal";
 
 export const INIT_FORM_STATE = {
   name: "",
@@ -18,22 +19,32 @@ export const INIT_FORM_STATE = {
 export function MealForm(props: MealFormProps) {
   const { type } = props;
 
+  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+  const [isHourModalOpen, setIsHourModalOpen] = useState(false);
   const [formData, setFormData] = useState(INIT_FORM_STATE);
 
   const navigation = useNavigation();
 
   const buttonTitle =
     type === "EDIT" ? "Salvar alterações" : "Cadastrar refeição";
-
+  console.log(formData);
   const isButtonDisabled =
     !formData.date ||
     !formData.hour ||
     typeof formData.isHealthyMeal == "undefined" ||
     !formData.name;
 
+  function toggleDateModal() {
+    setIsDateModalOpen(!isDateModalOpen);
+  }
+
+  function toggleHourModal() {
+    setIsHourModalOpen(!isHourModalOpen);
+  }
+
   function handleChangeInput(params: HandleChangeInputParams) {
     const { field, value } = params;
-
+    console.log(field, value);
     setFormData((prevState) => ({
       ...prevState,
       [field]: value,
@@ -46,6 +57,26 @@ export function MealForm(props: MealFormProps) {
     await STORAGE_MEALS.createMeal({ meal: formData });
 
     navigation.goBack();
+  }
+
+  console.log(formData);
+
+  function renderDateModal({
+    isVisible,
+    onRequestClose,
+    onChange,
+  }: {
+    isVisible: boolean;
+    onRequestClose: VoidFunction;
+    onChange: (value: string) => void;
+  }) {
+    return (
+      <DateModal
+        isVisible={isVisible}
+        onRequestClose={onRequestClose}
+        onChange={onChange}
+      />
+    );
   }
 
   return (
@@ -83,6 +114,7 @@ export function MealForm(props: MealFormProps) {
           numberOfLines={10}
           style={[styles.input, { height: 120 }]}
           value={formData.description}
+          placeholder="Macro-nutrientes, modo de preparo.."
           onChange={(text) =>
             handleChangeInput({
               field: "description",
@@ -100,17 +132,15 @@ export function MealForm(props: MealFormProps) {
           >
             Data
           </Text>
-          <TextInput
-            aria-label="input"
-            aria-labelledby="labelDate"
-            style={styles.input}
-            keyboardType="numeric"
-            inputMode="numeric"
-            value={formData.date}
-            onChange={(text) =>
-              handleChangeInput({ field: "date", value: text.nativeEvent.text })
-            }
-          />
+          <TouchableOpacity style={styles.input} onPress={toggleDateModal}>
+            <Text>{formData.date}</Text>
+          </TouchableOpacity>
+          {renderDateModal({
+            isVisible: isDateModalOpen,
+            onRequestClose: toggleDateModal,
+            onChange: (value: string) =>
+              handleChangeInput({ field: "date", value }),
+          })}
         </View>
         <View style={[styles.fieldsContainer, { flex: 1 }]}>
           <Text
@@ -125,8 +155,12 @@ export function MealForm(props: MealFormProps) {
             aria-labelledby="labelHour"
             style={styles.input}
             value={formData.hour}
+            placeholder="00:00"
             onChange={(text) =>
-              handleChangeInput({ field: "hour", value: text.nativeEvent.text })
+              handleChangeInput({
+                field: "hour",
+                value: text.nativeEvent.text,
+              })
             }
           />
         </View>
