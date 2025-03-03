@@ -9,6 +9,7 @@ export function Button(props: ButtonProps) {
     children,
     style,
     variant = "PRIMARY",
+    disabled,
     ...otherProps
   } = props;
 
@@ -20,7 +21,13 @@ export function Button(props: ButtonProps) {
 
   return (
     <TouchableOpacity
-      style={[styles.container, buttonVariantStyle, style]}
+      style={[
+        styles.container,
+        buttonVariantStyle,
+        style,
+        disabled && styles.disable,
+      ]}
+      disabled={disabled}
       {...otherProps}
     >
       {children}

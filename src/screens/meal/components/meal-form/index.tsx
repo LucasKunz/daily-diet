@@ -3,7 +3,9 @@ import styles from "./styles";
 import { COLORS } from "../../../../constants/colors";
 import { Button } from "../../../../components/button";
 import { useState } from "react";
-import { HandleChangeInputParams } from "./types";
+import { HandleChangeInputParams, MealFormProps } from "./types";
+import { useNavigation } from "@react-navigation/native";
+import { STORAGE_MEALS } from "../../../../storage/meals";
 
 export const INIT_FORM_STATE = {
   name: "",
@@ -13,8 +15,21 @@ export const INIT_FORM_STATE = {
   isHealthyMeal: undefined,
 };
 
-export function MealForm() {
+export function MealForm(props: MealFormProps) {
+  const { type } = props;
+
   const [formData, setFormData] = useState(INIT_FORM_STATE);
+
+  const navigation = useNavigation();
+
+  const buttonTitle =
+    type === "EDIT" ? "Salvar alterações" : "Cadastrar refeição";
+
+  const isButtonDisabled =
+    !formData.date ||
+    !formData.hour ||
+    typeof formData.isHealthyMeal == "undefined" ||
+    !formData.name;
 
   function handleChangeInput(params: HandleChangeInputParams) {
     const { field, value } = params;
@@ -25,9 +40,12 @@ export function MealForm() {
     }));
   }
 
-  function handleSubmit() {
-    console.log(INIT_FORM_STATE);
-    console.log(formData);
+  async function handleSubmit() {
+    if (isButtonDisabled) return;
+
+    await STORAGE_MEALS.createMeal({ meal: formData });
+
+    navigation.goBack();
   }
 
   return (
@@ -142,7 +160,7 @@ export function MealForm() {
           <TouchableOpacity
             style={[
               styles.radio,
-              !formData.isHealthyMeal && styles.unhealthyRadio,
+              formData.isHealthyMeal === false && styles.unhealthyRadio,
             ]}
             onPress={() =>
               handleChangeInput({ field: "isHealthyMeal", value: false })
@@ -152,7 +170,7 @@ export function MealForm() {
               style={{
                 height: 8,
                 width: 8,
-                borderRadius: 999,
+                borderRadius: 99,
                 backgroundColor: COLORS.RED,
               }}
             />
@@ -160,9 +178,10 @@ export function MealForm() {
           </TouchableOpacity>
         </View>
         <Button
-          buttonText="Cadastrar refeição"
+          buttonText={buttonTitle}
           style={{ marginTop: "auto" }}
           onPress={handleSubmit}
+          disabled={isButtonDisabled}
         />
       </View>
     </View>

@@ -26,4 +26,7 @@ export default StyleSheet.create({
   outlineTextVariant: {
     color: COLORS.GRAY_200,
   },
+  disable: {
+    opacity: 0.5,
+  },
 });
