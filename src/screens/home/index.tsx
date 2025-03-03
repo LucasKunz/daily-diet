@@ -1,39 +1,20 @@
 import { StatusBar } from "expo-status-bar";
-import { Alert, SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native";
 
 import styles from "./styles";
 
 import { Header } from "./components/header";
 import { Status } from "./components/status";
 import { Meals } from "./components/meals";
-import { useCallback, useState } from "react";
-import { STORAGE_MEALS } from "../../storage/meals";
-import { useFocusEffect } from "@react-navigation/native";
-import { Meal } from "../../types/meal";
+import { useMeals } from "../../hooks/use-meals";
 
 export default function Home() {
-  const [meals, setMeals] = useState<Meal[]>([]);
-
-  const getStorageMeals = useCallback(async () => {
-    try {
-      const storageMeals = await STORAGE_MEALS.getMeals();
-
-      if (storageMeals) setMeals(storageMeals);
-    } catch (error) {
-      Alert.alert(error as string);
-    }
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      getStorageMeals();
-    }, [])
-  );
+  const { meals } = useMeals();
 
   return (
     <SafeAreaView style={styles.container}>
       <Header />
-      <Status />
+      <Status meals={meals} />
       <Meals meals={meals} />
       <StatusBar style="auto" />
     </SafeAreaView>
