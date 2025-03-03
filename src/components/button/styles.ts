@@ -9,7 +9,8 @@ export default StyleSheet.create({
     gap: 12,
     height: 50,
     justifyContent: "center",
-    padding: 16,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
   },
   text: {
     color: COLORS.WHITE,
