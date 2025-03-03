@@ -4,8 +4,8 @@ import { COLORS } from "../../constants/colors";
 export default StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: COLORS.GRAY_200,
     borderRadius: 6,
+    flexDirection: "row",
     gap: 12,
     height: 50,
     justifyContent: "center",
@@ -15,5 +15,15 @@ export default StyleSheet.create({
   text: {
     color: COLORS.WHITE,
     fontWeight: "700",
+  },
+  primaryVariant: {
+    backgroundColor: COLORS.GRAY_200,
+  },
+  outlineVariant: {
+    borderColor: COLORS.GRAY_200,
+    borderWidth: 1,
+  },
+  outlineTextVariant: {
+    color: COLORS.GRAY_200,
   },
 });
