@@ -34,7 +34,6 @@ export const MealGroup = memo((props: MealsProps) => {
       </TouchableOpacity>
     );
   }
-  console.log(" item");
 
   return (
     <View style={styles.container}>

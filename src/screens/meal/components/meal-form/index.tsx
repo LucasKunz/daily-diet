@@ -79,8 +79,6 @@ export function MealForm(props: MealFormProps) {
     });
   }
 
-  console.log(formData);
-
   function renderDateModal({
     isVisible,
     onRequestClose,
