@@ -13,8 +13,9 @@ export function ListMeals(props: ListMealsProps) {
     return (
       <FlatList
         data={mealsByDay}
-        keyExtractor={(item) => item.day}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => <MealGroup group={item} />}
+        style={{ flex: 1 }}
         contentContainerStyle={styles.container}
       />
     );

@@ -2,9 +2,20 @@ import { Modal, Text, View } from "react-native";
 import { Button } from "../../../../components/button";
 import styles from "./styles";
 import { ExcludeMealModalProps } from "./types";
+import { STORAGE_MEALS } from "../../../../storage/meals";
+import { useNavigation } from "@react-navigation/native";
 
 export function ExcludeMealModal(props: ExcludeMealModalProps) {
-  const { isVisible, onRequestClose } = props;
+  const { isVisible, mealId, onRequestClose } = props;
+
+  const navigation = useNavigation();
+
+  async function handleExcludeMeal() {
+    await STORAGE_MEALS.deleteMeal(mealId);
+
+    onRequestClose();
+    navigation.navigate("home");
+  }
 
   return (
     <Modal
@@ -25,7 +36,11 @@ export function ExcludeMealModal(props: ExcludeMealModalProps) {
               variant="OUTLINE"
               onPress={onRequestClose}
             />
-            <Button buttonText="Sim, excluir" style={{ flex: 1 }} />
+            <Button
+              buttonText="Sim, excluir"
+              style={{ flex: 1 }}
+              onPress={handleExcludeMeal}
+            />
           </View>
         </View>
       </View>

@@ -6,13 +6,26 @@ import { useNavigation } from "@react-navigation/native";
 import { getDietInfos } from "../../../../utils/meals";
 import { HeaderStatusProps } from "./types";
 import { COLORS } from "../../../../constants/colors";
+import { ArrowUp } from "lucide-react-native";
 
 export function HeaderStatus(props: HeaderStatusProps) {
   const { meals } = props;
   const navigation = useNavigation();
 
   const { healthyMealsPercentage, isHealthyDiet } = getDietInfos(meals);
-  const backgroundColor = isHealthyDiet ? COLORS.GREEN_LIGHT : COLORS.RED_LIGHT;
+
+  const arrowColor =
+    healthyMealsPercentage === 0
+      ? COLORS.GRAY_200
+      : isHealthyDiet
+      ? COLORS.GREEN
+      : COLORS.RED;
+  const backgroundColor =
+    healthyMealsPercentage === 0
+      ? COLORS.GRAY_600
+      : isHealthyDiet
+      ? COLORS.GREEN_LIGHT
+      : COLORS.RED_LIGHT;
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
@@ -24,10 +37,7 @@ export function HeaderStatus(props: HeaderStatusProps) {
         style={styles.arrowContainer}
         onPress={() => navigation.goBack()}
       >
-        <Image
-          source={require("../../../../assets/arrow.svg")}
-          style={styles.arrow}
-        />
+        <ArrowUp color={arrowColor} />
       </TouchableOpacity>
     </View>
   );

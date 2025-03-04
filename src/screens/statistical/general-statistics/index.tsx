@@ -18,7 +18,7 @@ export function GeneralStatistics(props: GeneralStatisticsProps) {
       <View style={styles.cardsContainer}>
         <Card
           description="melhor sequência de pratos dentro da dieta"
-          title="22"
+          title="0"
         />
         <Card description="refeições registradas" title={String(mealsLength)} />
         <View
@@ -31,11 +31,13 @@ export function GeneralStatistics(props: GeneralStatisticsProps) {
             description="refeições dentro da dieta"
             title={String(healthyMeals)}
             backgroundColor={COLORS.GREEN_LIGHT}
+            style={{ flex: 1 }}
           />
           <Card
             description="refeições fora da dieta"
             title={String(unhealthyMeals)}
             backgroundColor={COLORS.RED_LIGHT}
+            style={{ flex: 1 }}
           />
         </View>
       </View>

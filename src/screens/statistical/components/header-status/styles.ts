@@ -18,7 +18,7 @@ export default StyleSheet.create({
     position: "absolute",
     top: 8,
     left: 28,
-    transform: [{ rotate: "-135deg" }],
+    transform: [{ rotate: "-90deg" }],
   },
   arrow: {
     height: 24,

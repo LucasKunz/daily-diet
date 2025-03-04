@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native";
-import { HeaderStatus } from "./components/status";
+import { HeaderStatus } from "./components/header-status";
 import { GeneralStatistics } from "./general-statistics";
 
 import styles from "./styles";
@@ -10,15 +10,16 @@ import { COLORS } from "../../constants/colors";
 
 export default function Statistical() {
   const { meals } = useMeals();
-  const { isHealthyDiet } = getDietInfos(meals);
+  const { healthyMealsPercentage, isHealthyDiet } = getDietInfos(meals);
+  const backgroundColor =
+    healthyMealsPercentage == 0
+      ? COLORS.GRAY_600
+      : !isHealthyDiet
+      ? COLORS.RED_LIGHT
+      : COLORS.GREEN_LIGHT;
 
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        !isHealthyDiet && { backgroundColor: COLORS.RED_LIGHT },
-      ]}
-    >
+    <SafeAreaView style={[styles.container, { backgroundColor }]}>
       <HeaderStatus meals={meals} />
       <GeneralStatistics meals={meals} />
       <StatusBar backgroundColor="red" translucent />

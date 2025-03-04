@@ -7,12 +7,12 @@ import { RouteParams } from "./types";
 
 export default function Meal() {
   const { params } = useRoute();
-  const { type = "NEW" } = params as RouteParams;
+  const { id } = params as RouteParams;
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header type={type} />
-      <MealForm type={type} />
+      <Header id={id} />
+      <MealForm id={id} />
     </SafeAreaView>
   );
 }

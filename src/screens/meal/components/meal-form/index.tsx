@@ -2,13 +2,17 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
 import { COLORS } from "../../../../constants/colors";
 import { Button } from "../../../../components/button";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { HandleChangeInputParams, MealFormProps } from "./types";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { STORAGE_MEALS } from "../../../../storage/meals";
 import { DateModal } from "../../../../components/date-modal";
 
+import UUID from "react-native-uuid";
+import { useMeals } from "../../../../hooks/use-meals";
+
 export const INIT_FORM_STATE = {
+  id: "",
   name: "",
   description: "",
   date: "",
@@ -17,34 +21,42 @@ export const INIT_FORM_STATE = {
 };
 
 export function MealForm(props: MealFormProps) {
-  const { type } = props;
+  const { id } = props;
 
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
-  const [isHourModalOpen, setIsHourModalOpen] = useState(false);
   const [formData, setFormData] = useState(INIT_FORM_STATE);
+
+  const { meals } = useMeals();
 
   const navigation = useNavigation();
 
-  const buttonTitle =
-    type === "EDIT" ? "Salvar alterações" : "Cadastrar refeição";
-  console.log(formData);
+  const buttonTitle = !!id ? "Salvar alterações" : "Cadastrar refeição";
+
   const isButtonDisabled =
     !formData.date ||
     !formData.hour ||
     typeof formData.isHealthyMeal == "undefined" ||
     !formData.name;
 
+  useFocusEffect(
+    useCallback(() => {
+      if (!meals.length) return;
+
+      const editingMeal = meals.find((meal) => meal.id === id);
+
+      if (!editingMeal) return;
+
+      setFormData(editingMeal);
+    }, [meals])
+  );
+
   function toggleDateModal() {
     setIsDateModalOpen(!isDateModalOpen);
   }
 
-  function toggleHourModal() {
-    setIsHourModalOpen(!isHourModalOpen);
-  }
-
   function handleChangeInput(params: HandleChangeInputParams) {
     const { field, value } = params;
-    console.log(field, value);
+
     setFormData((prevState) => ({
       ...prevState,
       [field]: value,
@@ -54,9 +66,17 @@ export function MealForm(props: MealFormProps) {
   async function handleSubmit() {
     if (isButtonDisabled) return;
 
-    await STORAGE_MEALS.createMeal({ meal: formData });
+    if (id) {
+      await STORAGE_MEALS.updateMeal({ meal: formData });
 
-    navigation.goBack();
+      return navigation.goBack();
+    }
+
+    await STORAGE_MEALS.createMeal({ meal: { ...formData, id: UUID.v4() } });
+
+    navigation.navigate("feedback", {
+      isHealthyMeal: String(formData.isHealthyMeal),
+    });
   }
 
   console.log(formData);

@@ -5,10 +5,10 @@ import { useNavigation } from "@react-navigation/native";
 import { HeaderProps } from "./types";
 
 export function Header(props: HeaderProps) {
-  const { type } = props;
+  const { id } = props;
   const navigation = useNavigation();
 
-  const title = type === "EDIT" ? "Editar refeição" : "Nova refeição";
+  const title = !!id ? "Editar refeição" : "Nova refeição";
 
   return (
     <View style={styles.container}>

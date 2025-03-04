@@ -6,5 +6,5 @@ export type HandleChangeInputParams = {
 };
 
 export type MealFormProps = {
-  type: "NEW" | "EDIT";
+  id?: string;
 };

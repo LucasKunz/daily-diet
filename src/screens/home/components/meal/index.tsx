@@ -1,12 +1,20 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { MealsProps } from "./types";
 import styles from "./styles";
 import { COLORS } from "../../../../constants/colors";
 import { Meal } from "../../../../types/meal";
+import { memo } from "react";
+import { useNavigation } from "@react-navigation/native";
 
-export function MealGroup(props: MealsProps) {
+export const MealGroup = memo((props: MealsProps) => {
   const { group } = props;
   const { day, meals } = group;
+
+  const navigation = useNavigation();
+
+  function handleMealItemPress(meal: Meal) {
+    navigation.navigate("meal-details", { id: meal.id });
+  }
 
   function renderMeal(meal: Meal) {
     const { hour, isHealthyMeal, name } = meal;
@@ -15,14 +23,18 @@ export function MealGroup(props: MealsProps) {
       : COLORS.RED_MIDDLE;
 
     return (
-      <View style={styles.mealContainer}>
+      <TouchableOpacity
+        style={styles.mealContainer}
+        onPress={() => handleMealItemPress(meal)}
+      >
         <Text style={styles.hour}>{hour}</Text>
         <View style={styles.separator} />
         <Text style={styles.title}>{name}</Text>
         <View style={[styles.healthy, { backgroundColor: backgroundStatus }]} />
-      </View>
+      </TouchableOpacity>
     );
   }
+  console.log(" item");
 
   return (
     <View style={styles.container}>
@@ -30,4 +42,4 @@ export function MealGroup(props: MealsProps) {
       {meals.map((meal) => renderMeal(meal))}
     </View>
   );
-}
+});

@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusProps } from "./types";
 import { COLORS } from "../../../../constants/colors";
 import { getDietInfos } from "../../../../utils/meals";
+import { ArrowUp } from "lucide-react-native";
 
 export function Status(props: StatusProps) {
   const { meals } = props;
@@ -13,8 +14,18 @@ export function Status(props: StatusProps) {
   const navigation = useNavigation();
   const { healthyMealsPercentage, isHealthyDiet } = getDietInfos(meals);
 
-  const colorStatus = isHealthyDiet ? COLORS.GREEN_LIGHT : COLORS.RED_LIGHT;
-  const arrowColor = isHealthyDiet ? COLORS.GREEN : COLORS.RED;
+  const colorStatus =
+    healthyMealsPercentage === 0
+      ? COLORS.GRAY_600
+      : isHealthyDiet
+      ? COLORS.GREEN_LIGHT
+      : COLORS.RED_LIGHT;
+  const arrowColor =
+    healthyMealsPercentage === 0
+      ? COLORS.GRAY_200
+      : isHealthyDiet
+      ? COLORS.GREEN
+      : COLORS.RED;
 
   return (
     <View style={styles.container}>
@@ -27,10 +38,7 @@ export function Status(props: StatusProps) {
           style={styles.arrowContainer}
           onPress={() => navigation.navigate("statistical")}
         >
-          <Image
-            source={require("../../../../assets/arrow.svg")}
-            style={styles.arrow}
-          />
+          <ArrowUp color={arrowColor} style={styles.arrow} />
         </TouchableOpacity>
       </View>
     </View>

@@ -5,18 +5,30 @@ import { Button } from "../../components/button";
 import { COLORS } from "../../constants/colors";
 
 import styles from "./styles";
+import { useNavigation, useRoute } from "@react-navigation/native";
+
+import happyImage from "../../assets/happy-feedback.png";
+import unhappyImage from "../../assets/sad-feedback.png";
+
+type RouteParams = {
+  isHealthyMeal: string;
+};
 
 export default function Feedback() {
-  const isHealthyMeal = false;
+  const { params } = useRoute();
+  const navigation = useNavigation();
+  const { isHealthyMeal } = params as RouteParams;
 
-  const title = isHealthyMeal ? "Continue assim!" : "Que pena!";
-  const description1 = isHealthyMeal ? "Você continua " : "Você ";
-  const description2 = isHealthyMeal ? "dentro da dieta." : "saiu da dieta";
-  const description3 = isHealthyMeal
+  const isHealthy = isHealthyMeal === "true";
+
+  const title = isHealthy ? "Continue assim!" : "Que pena!";
+  const description1 = isHealthy ? "Você continua " : "Você ";
+  const description2 = isHealthy ? "dentro da dieta." : "saiu da dieta";
+  const description3 = isHealthy
     ? " Muito bem!"
     : " dessa vez, mas continue se esforçando e não desista!";
-  const imageSource = isHealthyMeal ? "happy-feedback.png" : "sad-feedback.png";
-  const titleColor = isHealthyMeal ? COLORS.GREEN : COLORS.RED;
+  const imageSource = isHealthy ? happyImage : unhappyImage;
+  const titleColor = isHealthy ? COLORS.GREEN : COLORS.RED;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,11 +40,11 @@ export default function Feedback() {
           {description3}
         </Text>
       </View>
-      <Image
-        style={styles.image}
-        source={require(`../../assets/${imageSource}`)}
+      <Image style={styles.image} source={imageSource} />
+      <Button
+        buttonText="Ir para a página inicial"
+        onPress={() => navigation.navigate("home")}
       />
-      <Button buttonText="Ir para a página inicial" />
     </SafeAreaView>
   );
 }

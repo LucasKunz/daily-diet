@@ -26,7 +26,6 @@ export default StyleSheet.create({
     right: 8,
   },
   arrow: {
-    height: 24,
-    width: 24,
+    transform: [{ rotate: "45deg" }],
   },
 });

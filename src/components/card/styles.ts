@@ -6,7 +6,6 @@ export default StyleSheet.create({
     alignItems: "center",
     borderRadius: 8,
     gap: 8,
-    flex: 1,
     padding: 16,
     width: "auto",
   },
